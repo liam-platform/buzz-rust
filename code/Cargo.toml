@@ -41,7 +41,7 @@ arrow = { version = "47.0.0" }
 arrow-parquet = { package = "parquet", version = "47.0.0", features = ["arrow"] }
 datafusion = "33.0.0"
 arrow-flight = { version = "47.0.0" }
-deltalake = "0.16.5"
+deltalake = { version = "0.16.5" }
 chrono = { version = "0.4" }
 tokio = { version = "1.0", features = ["fs", "macros", "io-std"] }
 tokio-stream = { version = "0.1.2" }

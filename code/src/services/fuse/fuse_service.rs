@@ -84,7 +84,7 @@ impl FuseService {
 
         // connect to the hcombs to init the query and get result handle
         println!("[fuse] schedule hcombs");
-        let future_hcombs = (0..plan.zones.len()).map(|i| {
+        let future_hcombs = (0..plan.zones.len()).map(|&i| {
             self.hcomb_scheduler.schedule(
                 &addresses[i],
                 &plan.zones[i].hcomb.table,
@@ -102,13 +102,13 @@ impl FuseService {
         println!("[fuse] schedule {} hbees", plan.nb_hbee);
         let start_schedule = Instant::now();
         let mut hcomb_hbee_idx_tuple = (0..plan.zones.len())
-            .flat_map(|i| (0..plan.zones[i].hbee.len()).map(move |j| (i, j)))
+            .flat_map(|i| (0..plan.zones[i].hbee.len()).map(move |j| (&i, j)))
             .collect::<Vec<_>>();
 
         // sort by hbee index in order to alternate between hcombs
         hcomb_hbee_idx_tuple.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
 
-        let future_hbees = hcomb_hbee_idx_tuple.into_iter().map(|(i, j)| {
+        let future_hbees = hcomb_hbee_idx_tuple.into_iter().map(|(i, &j)| {
             self.hbee_scheduler.schedule(
                 query_id.clone(),
                 &addresses[i],
@@ -127,11 +127,12 @@ impl FuseService {
             start_schedule.elapsed().as_millis()
         );
 
-        // wait for hcombs to collect all the results and desplay them comb by comb
+        // wait for hcombs to collect all the results and display them comb by comb
         println!("[fuse] collect hcombs");
         for hcomb_stream in hcomb_streams {
             let result: Vec<RecordBatch> = hcomb_stream.try_collect::<Vec<_>>().await?;
-            pretty::print_batches(&result).unwrap();
+            // TODO: display the result here using another crate rather than datafusion pretty
+            // pretty::print_batches(&result).unwrap();
         }
 
         println!(
