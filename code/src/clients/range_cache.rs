@@ -200,7 +200,7 @@ impl RangeCache {
     }
 
     /// Get a chunk from the cache
-    /// For now the cache can only get get single chunck readers and fails if the dl was not scheduled
+    /// For now the cache can only get get single chunk readers and fails if the dl was not scheduled
     /// If the download is not finished, this waits synchronously for the chunk to be ready
     pub fn get(
         &self,
