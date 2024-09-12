@@ -50,31 +50,34 @@ impl FlightService for FlightServiceImpl {
     type HandshakeStream = Pin<
         Box<dyn Stream<Item = Result<HandshakeResponse, Status>> + Send + Sync + 'static>,
     >;
+    async fn handshake(
+        &self,
+        _request: Request<Streaming<HandshakeRequest>>,
+    ) -> Result<Response<Self::HandshakeStream>, Status> {
+        Err(Status::unimplemented("Not yet implemented"))
+    }
     type ListFlightsStream =
         Pin<Box<dyn Stream<Item = Result<FlightInfo, Status>> + Send + Sync + 'static>>;
-    type DoGetStream =
-        Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
-    type DoPutStream =
-        Pin<Box<dyn Stream<Item = Result<PutResult, Status>> + Send + Sync + 'static>>;
-    type DoActionStream = Pin<
-        Box<
-            dyn Stream<Item = Result<arrow_flight::Result, Status>>
-                + Send
-                + Sync
-                + 'static,
-        >,
-    >;
-    type ListActionsStream =
-        Pin<Box<dyn Stream<Item = Result<ActionType, Status>> + Send + Sync + 'static>>;
-    type DoExchangeStream =
-        Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
-
+    async fn list_flights(
+        &self,
+        _request: Request<Criteria>,
+    ) -> Result<Response<Self::ListFlightsStream>, Status> {
+        Err(Status::unimplemented("Not yet implemented"))
+    }
+    async fn get_flight_info(
+        &self,
+        _request: Request<FlightDescriptor>,
+    ) -> Result<Response<FlightInfo>, Status> {
+        Err(Status::unimplemented("Not yet implemented"))
+    }
     async fn get_schema(
         &self,
         _request: Request<FlightDescriptor>,
     ) -> Result<Response<SchemaResult>, Status> {
         Err(Status::unimplemented("Not yet implemented"))
     }
+    type DoGetStream =
+        Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
 
     async fn do_get(
         &self,
@@ -103,26 +106,8 @@ impl FlightService for FlightServiceImpl {
         Ok(Response::new(Box::pin(flights)))
     }
 
-    async fn handshake(
-        &self,
-        _request: Request<Streaming<HandshakeRequest>>,
-    ) -> Result<Response<Self::HandshakeStream>, Status> {
-        Err(Status::unimplemented("Not yet implemented"))
-    }
-
-    async fn list_flights(
-        &self,
-        _request: Request<Criteria>,
-    ) -> Result<Response<Self::ListFlightsStream>, Status> {
-        Err(Status::unimplemented("Not yet implemented"))
-    }
-
-    async fn get_flight_info(
-        &self,
-        _request: Request<FlightDescriptor>,
-    ) -> Result<Response<FlightInfo>, Status> {
-        Err(Status::unimplemented("Not yet implemented"))
-    }
+    type DoPutStream =
+        Pin<Box<dyn Stream<Item = Result<PutResult, Status>> + Send + Sync + 'static>>;
 
     async fn do_put(
         &self,
@@ -138,6 +123,25 @@ impl FlightService for FlightServiceImpl {
         let output = futures::stream::empty();
         Ok(Response::new(Box::pin(output) as Self::DoPutStream))
     }
+
+    type DoExchangeStream =
+        Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
+
+    async fn do_exchange(
+        &self,
+        _request: Request<Streaming<FlightData>>,
+    ) -> Result<Response<Self::DoExchangeStream>, Status> {
+        Err(Status::unimplemented("Not yet implemented"))
+    }
+
+    type DoActionStream = Pin<
+        Box<
+            dyn Stream<Item = Result<arrow_flight::Result, Status>>
+                + Send
+                + Sync
+                + 'static,
+        >,
+    >;
 
     async fn do_action(
         &self,
@@ -168,17 +172,13 @@ impl FlightService for FlightServiceImpl {
         }
     }
 
+    type ListActionsStream =
+        Pin<Box<dyn Stream<Item = Result<ActionType, Status>> + Send + Sync + 'static>>;
+
     async fn list_actions(
         &self,
         _request: Request<Empty>,
     ) -> Result<Response<Self::ListActionsStream>, Status> {
-        Err(Status::unimplemented("Not yet implemented"))
-    }
-
-    async fn do_exchange(
-        &self,
-        _request: Request<Streaming<FlightData>>,
-    ) -> Result<Response<Self::DoExchangeStream>, Status> {
         Err(Status::unimplemented("Not yet implemented"))
     }
 }

@@ -37,31 +37,30 @@ name = "fuse_lambda"
 path = "src/bin/main_fuse_lambda.rs"
 
 [dependencies]
-arrow = { version = "4.3", features = ["prettyprint"] }
-arrow-parquet = { package = "parquet", version = "4.3", features = ["arrow"] }
-datafusion = { git = "https://github.com/apache/arrow-datafusion", rev = "c82c29c926e73b3c3b9c5351bcd7b01e4d0aa6a8" }
-arrow-flight = { version = "4.0"  }
-deltalake = { git = "https://github.com/delta-io/delta-rs/", rev = "d56d10fac10088440e14da4abb9eeb2cf5e504a1", features = ["s3-rustls"] }
-
+arrow = { version = "47.0.0" }
+arrow-parquet = { package = "parquet", version = "47.0.0", features = ["arrow"] }
+datafusion = "33.0.0"
+arrow-flight = { version = "47.0.0" }
+deltalake = { version = "0.16.5" }
 chrono = { version = "0.4" }
 tokio = { version = "1.0", features = ["fs", "macros", "io-std"] }
 tokio-stream = { version = "0.1.2" }
-rusoto_core = { version = "0.46.0", default_features = false, features=["rustls"] }
-rusoto_s3 = { version = "0.46.0", default_features = false, features=["rustls"] }
-rusoto_lambda = { version = "0.46.0", default_features = false, features=["rustls"] }
-rusoto_ecs = { version = "0.46.0", default_features = false, features=["rustls"] }
+rusoto_core = { version = "0.48.0", default_features = false, features=["rustls"] }
+rusoto_s3 = { version = "0.48.0", default_features = false, features=["rustls"] }
+rusoto_lambda = { version = "0.48.0", default_features = false, features=["rustls"] }
+rusoto_ecs = { version = "0.48.0", default_features = false, features=["rustls"] }
 async-trait = "0.1"
 futures = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-lambda_runtime = "0.2.1"
-tonic = "0.4"
+lambda_runtime = "0.8.2"
+tonic = "0.10.2"
 pin-project = "1.0"
-prost = "0.7"
-prost-types = "0.7"
+prost = "0.12.1"
+prost-types = "0.12.1"
 hyper = { version = "0.14.2", features = ["stream"] }
-base64 = { version = "0.13.0" }
+base64 = { version = "0.21.4" }
 envy = {version = "0.4" }
 
 [build-dependencies]
-prost-build = { version = "0.7" }
+prost-build = { version = "0.12.1" }

@@ -1,4 +1,4 @@
-use std::error;
+use std::{error, fmt};
 use std::fmt::{Display, Formatter};
 use std::io;
 use std::result;
@@ -7,6 +7,17 @@ use arrow::error::ArrowError;
 use arrow_parquet::errors::ParquetError;
 use datafusion::error::DataFusionError;
 use deltalake::DeltaTableError;
+
+pub enum CustomDeltaTableError {
+    DeltaError(DeltaTableError)
+}
+
+/// Implement Display for CustomDeltaTableError
+impl Display for CustomDeltaTableError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "DeltaTableError: {}", self.to_string())
+    }
+}
 
 /// Result type for operations that could result in an [BuzzError]
 pub type Result<T> = result::Result<T, BuzzError>;
@@ -17,7 +28,7 @@ pub enum BuzzError {
     /// Error returned by arrow.
     ArrowError(ArrowError),
     /// Error returned by DeltaLake.
-    DeltaTableError(DeltaTableError),
+    DeltaTableError(CustomDeltaTableError),
     /// Wraps an error from the Parquet crate
     ParquetError(ParquetError),
     /// Wraps an error from the DataFusion crate
@@ -32,8 +43,8 @@ pub enum BuzzError {
     NotImplemented(String),
     /// Error returned as a consequence of an error in Buzz.
     /// This error should not happen in normal usage of Buzz.
-    // BuzzError has internal invariants that we are unable to ask the compiler to check for us.
-    // This error is raised when one of those invariants is not verified during execution.
+    /// BuzzError has internal invariants that we are unable to ask the compiler to check for us.
+    /// This error is raised when one of those invariants is not verified during execution.
     Internal(String),
     /// This error happens whenever a plan is not valid. Examples include
     /// impossible casts, schema inference not possible and non-unique column names.
@@ -141,7 +152,7 @@ impl From<DataFusionError> for BuzzError {
 }
 
 impl From<DeltaTableError> for BuzzError {
-    fn from(e: DeltaTableError) -> Self {
+    fn from(e: CustomDeltaTableError) -> Self {
         BuzzError::DeltaTableError(e)
     }
 }

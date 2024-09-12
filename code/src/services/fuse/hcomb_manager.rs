@@ -10,7 +10,7 @@ use tokio::time::timeout;
 
 #[async_trait]
 pub trait HCombManager {
-    /// Search for availaible combs or start new ones if none was found.
+    /// Search for available combs or start new ones if none was found.
     async fn find_or_start(&self, capactity: &HCombCapacity)
         -> Result<Vec<HCombAddress>>;
 }
